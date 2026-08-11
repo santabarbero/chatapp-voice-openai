@@ -38,8 +38,30 @@ def speech_to_text(audio_binary):
     return text
 
 
-def text_to_speech(text, voice=''):
-  return None
+def text_to_speech(text, voice=""):
+    # Configurar la URL de la API HTTP de Watson Text-to-Speech
+    base_url = 'https://sn-watson-tts.labs.skills.network'
+    api_url = base_url + '/text-to-speech/api/v1/synthesize?output=output_text.wav'
+
+    # Agregar el parámetro de voz en api_url si el usuario seleccionó una voz preferida
+    if voice != "" and voice != "default":
+        api_url += "&voice=" + voice
+
+    # Establecer los encabezados para la solicitud HTTP
+    headers = {
+        'Accept': 'audio/wav',
+        'Content-Type': 'application/json',
+    }
+
+    # Establecer el cuerpo de la solicitud HTTP
+    json_data = {
+        'text': text,
+    }
+
+    # Enviar la solicitud HTTP Post al servicio Watson Text-to-Speech
+    response = requests.post(api_url, headers=headers, json=json_data)
+    print('respuesta de texto a voz:', response)
+    return response.content
 
 def openai_process_message(user_message):
     # Set the prompt for OpenAI Api
